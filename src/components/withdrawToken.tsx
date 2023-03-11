@@ -2,15 +2,14 @@ import { Button } from "@mui/material";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { TransactionSignature } from "@solana/web3.js";
 import {
-  PublicKey,
   Transaction,
-  TransactionInstruction,
 } from "@solana/web3.js";
 import type { FC } from "react";
 import React, { useCallback } from "react";
 import { useNotify } from "./notify";
+import { withdrawToken } from "@/apis/withdrawToken";
 
-export const SendTransaction: FC = () => {
+export const WithdrawToken: FC = () => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
   const notify = useNotify();
@@ -25,20 +24,11 @@ export const SendTransaction: FC = () => {
         value: { blockhash, lastValidBlockHeight },
       } = await connection.getLatestBlockhashAndContext();
 
-      const transaction = new Transaction({
-        feePayer: publicKey,
-        recentBlockhash: blockhash,
-      }).add(
-        new TransactionInstruction({
-          data: Buffer.from(
-            "Hello, from the Solana Wallet Adapter example app!"
-          ),
-          keys: [],
-          programId: new PublicKey(
-            "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
-          ),
-        })
-      );
+      const transactionId = "762e23db-9c48-4a22-b871-828333300d3e"
+
+      const { buffer } = await withdrawToken(transactionId);
+      console.log({buffer})
+      const transaction = Transaction.from(Buffer.from(buffer));
 
       signature = await sendTransaction(transaction, connection, {
         minContextSlot,
@@ -63,7 +53,7 @@ export const SendTransaction: FC = () => {
       onClick={onClick}
       disabled={!publicKey}
     >
-      Send Transaction (devnet)
+      Withdrawals Token
     </Button>
   );
 };

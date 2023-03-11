@@ -77,19 +77,43 @@ const ReactUIWalletModalButtonDynamic = dynamic(
   { ssr: false }
 );
 
-const RequestAirdropDynamic = dynamic(
-  async () => (await import("../components/RequestAirdrop")).RequestAirdrop,
+const WithdrawTokenDynamic = dynamic(
+  async () => (await import("../components/withdrawToken")).WithdrawToken,
   {
     ssr: false,
   }
 );
-const SendLegacyTransactionDynamic = dynamic(
+
+const WithdrawNftDynamic = dynamic(
+  async () => (await import("../components/withdrawNft")).WithdrawNft,
+  {
+    ssr: false,
+  }
+);
+
+const CancelWithdrawTokenDynamic = dynamic(
   async () =>
-    (await import("../components/SendLegacyTransaction")).SendLegacyTransaction,
+    (await import("../components/cancelWithdrawToken")).CancelWithdrawToken,
+  {
+    ssr: false,
+  }
+);
+
+const CancelWithdrawNftDynamic = dynamic(
+  async () =>
+    (await import("../components/cancelWithdrawNft")).CancelWithdrawNft,
+  {
+    ssr: false,
+  }
+);
+
+const DepositNftDynamic = dynamic(
+  async () =>
+    (await import("../components/depositNft")).DepositNft,
   { ssr: false }
 );
-const SendTransactionDynamic = dynamic(
-  async () => (await import("../components/SendTransaction")).SendTransaction,
+const DepositTokenDynamic = dynamic(
+  async () => (await import("../components/depositToken")).DepositToken,
   {
     ssr: false,
   }
@@ -109,21 +133,29 @@ const GetNftDynamic = dynamic(
   }
 );
 
-const SendV0TransactionDynamic = dynamic(
+const CreateOtpNftDynamic = dynamic(
   async () =>
-    (await import("../components/SendV0Transaction")).SendV0Transaction,
+    (await import("../components/CreateOtpNft")).CreateOtpNft,
   { ssr: false }
 );
-const SignMessageDynamic = dynamic(
-  async () => (await import("../components/SignMessage")).SignMessage,
-  { ssr: false }
-);
-const SignTransactionDynamic = dynamic(
-  async () => (await import("../components/SignTransaction")).SignTransaction,
+
+const CreateOtpTokenDynamic = dynamic(
+  async () => (await import("../components/CreateOtpToken")).CreateOtpToken,
   {
     ssr: false,
   }
 );
+
+const ConfirmOtpTokenDynamic = dynamic(
+  async () => (await import("../components/ConfirmOtpToken")).ConfirmOtpToken,
+  { ssr: false }
+);
+
+const ConfirmOtpNftDynamic = dynamic(
+  async () => (await import("../components/ConfirmOtpNft")).ConfirmOtpNft,
+  { ssr: false }
+);
+
 
 const Index: NextPage = () => {
   const { autoConnect, setAutoConnect } = useAutoConnect();
@@ -135,6 +167,8 @@ const Index: NextPage = () => {
           <TableRow>
             <TableCell width={240}>Component</TableCell>
             <TableCell width={240}>Material UI</TableCell>
+            <TableCell width={240}>Ant Design</TableCell>
+            <TableCell width={240}>React UI</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -144,12 +178,24 @@ const Index: NextPage = () => {
             <TableCell>
               <MaterialUIWalletConnectButtonDynamic />
             </TableCell>
+            <TableCell>
+              <AntDesignWalletConnectButtonDynamic />
+            </TableCell>
+            <TableCell>
+              <ReactUIWalletConnectButtonDynamic />
+            </TableCell>
             <TableCell></TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Disconnect Button</TableCell>
             <TableCell>
               <MaterialUIWalletDisconnectButtonDynamic />
+            </TableCell>
+            <TableCell>
+              <AntDesignWalletDisconnectButtonDynamic />
+            </TableCell>
+            <TableCell>
+              <ReactUIWalletDisconnectButtonDynamic />
             </TableCell>
             <TableCell></TableCell>
           </TableRow>
@@ -158,11 +204,24 @@ const Index: NextPage = () => {
             <TableCell>
               <MaterialUIWalletDialogButtonDynamic />
             </TableCell>
+            <TableCell>
+              <AntDesignWalletModalButtonDynamic />
+            </TableCell>
+            <TableCell>
+              <ReactUIWalletModalButtonDynamic />
+            </TableCell>
+            <TableCell></TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Multi Button</TableCell>
             <TableCell>
               <MaterialUIWalletMultiButtonDynamic />
+            </TableCell>
+            <TableCell>
+              <AntDesignWalletMultiButtonDynamic />
+            </TableCell>
+            <TableCell>
+              <ReactUIWalletMultiButtonDynamic />
             </TableCell>
             <TableCell></TableCell>
           </TableRow>
@@ -181,33 +240,58 @@ const Index: NextPage = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
+
+        DEPOSIT TOKEN & NFT
+        <TableRow>
+            <TableCell></TableCell>
             <TableCell>
-              <Tooltip
-                title="Only runs if the wallet is ready to connect"
-                placement="left"
-              >
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="autoConnect"
-                      color="secondary"
-                      checked={autoConnect}
-                      onChange={(event, checked) => setAutoConnect(checked)}
-                    />
-                  }
-                  label="AutoConnect"
-                />
-              </Tooltip>
-              <TableCell>
-                <GetTokenDynamic />
-              </TableCell>
-              <TableCell>
-                <GetNftDynamic />
-              </TableCell>
+              <DepositTokenDynamic />
+            </TableCell>
+            <TableCell>
+              <DepositNftDynamic />
             </TableCell>
             <TableCell></TableCell>
           </TableRow>
+
+          WITHDRAW TOKEN
+          <TableRow>
+            <TableCell>
+            </TableCell>
+            <TableCell>
+              <CreateOtpTokenDynamic />
+            </TableCell>
+            <TableCell>
+              <ConfirmOtpTokenDynamic />
+            </TableCell>
+            <TableCell>
+              <WithdrawTokenDynamic />
+            </TableCell>
+
+            <TableCell>
+              <CancelWithdrawTokenDynamic />
+            </TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+
+          WITHDRAW NFT
+          <TableRow>
+            <TableCell>
+            </TableCell>
+            <TableCell>
+              <CreateOtpNftDynamic />
+            </TableCell>
+            <TableCell>
+              <ConfirmOtpNftDynamic />
+            </TableCell>
+            <TableCell>
+              <WithdrawNftDynamic />
+            </TableCell>
+            <TableCell>
+              <CancelWithdrawNftDynamic />
+            </TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+         
         </TableBody>
       </Table>
     </>

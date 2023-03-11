@@ -1,54 +1,34 @@
+import { withdrawNft } from "@/apis/withdrawNft";
 import { Button } from "@mui/material";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { TransactionSignature } from "@solana/web3.js";
 import {
-  PublicKey,
-  TransactionMessage,
-  VersionedTransaction,
+  Transaction,
 } from "@solana/web3.js";
 import type { FC } from "react";
 import React, { useCallback } from "react";
 import { useNotify } from "./notify";
 
-export const SendLegacyTransaction: FC = () => {
+export const WithdrawNft: FC = () => {
   const { connection } = useConnection();
-  const { publicKey, sendTransaction, wallet } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const notify = useNotify();
-  const supportedTransactionVersions =
-    wallet?.adapter.supportedTransactionVersions;
 
   const onClick = useCallback(async () => {
     let signature: TransactionSignature | undefined = undefined;
     try {
       if (!publicKey) throw new Error("Wallet not connected!");
-      if (!supportedTransactionVersions)
-        throw new Error("Wallet doesn't support versioned transactions!");
-      if (!supportedTransactionVersions.has("legacy"))
-        throw new Error("Wallet doesn't support legacy transactions!");
 
       const {
         context: { slot: minContextSlot },
         value: { blockhash, lastValidBlockHeight },
       } = await connection.getLatestBlockhashAndContext();
 
-      const message = new TransactionMessage({
-        payerKey: publicKey,
-        recentBlockhash: blockhash,
-        instructions: [
-          {
-            data: Buffer.from(
-              "Hello, from the Solana Wallet Adapter example app!"
-            ),
-            keys: [],
-            programId: new PublicKey(
-              "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
-            ),
-          },
-        ],
-      });
-      const transaction = new VersionedTransaction(
-        message.compileToLegacyMessage()
-      );
+      const transactionId = "762e23db-9c48-4a22-b871-828333300d3e"
+
+      const { buffer } = await withdrawNft(transactionId);
+      console.log({buffer})
+      const transaction = Transaction.from(Buffer.from(buffer));
 
       signature = await sendTransaction(transaction, connection, {
         minContextSlot,
@@ -64,22 +44,16 @@ export const SendLegacyTransaction: FC = () => {
     } catch (error: any) {
       notify("error", `Transaction failed! ${error?.message}`, signature);
     }
-  }, [
-    publicKey,
-    supportedTransactionVersions,
-    connection,
-    sendTransaction,
-    notify,
-  ]);
+  }, [publicKey, connection, sendTransaction, notify]);
 
   return (
     <Button
       variant="contained"
       color="secondary"
       onClick={onClick}
-      disabled={!publicKey || !supportedTransactionVersions?.has("legacy")}
+      disabled={!publicKey}
     >
-      Send Legacy Transaction (devnet)
+      Withdrawals Nft
     </Button>
   );
 };
